@@ -8,7 +8,10 @@ import {
   Container,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 import Input from "./Input";
 import Icon from "./Icon";
 
@@ -18,6 +21,8 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignUp] = useState(false);
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventdefault();
@@ -34,7 +39,16 @@ const Auth = () => {
   };
 
   const googleSuccess = async (res) => {
-    console.log(res);
+    const decode = jwt_decode(res.credential);
+    // console.log(decode);
+    // const result = res?.profileObj;
+    // const token = res?.tokenId;
+    try {
+      dispatch({ type: "AUTH", data: { decode } });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   const googleFaliure = (error) => {
     console.log(error);
@@ -98,7 +112,6 @@ const Auth = () => {
             {isSignup ? "Sign Up" : "Sign In"}
           </Button>
           <GoogleLogin
-            clientId="871733073990-27iqllf9evomnuuuvslbclh7trnd1sbp.apps.googleusercontent.com"
             render={(renderProps) => (
               <Button
                 className={classes.googleButton}
@@ -113,7 +126,7 @@ const Auth = () => {
               </Button>
             )}
             onSuccess={googleSuccess}
-            onFailure={googleFaliure}
+            onError={googleFaliure}
             cookiePolicy="single_host_origin"
           />
           <Grid container justify="flex-end">
