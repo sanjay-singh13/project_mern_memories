@@ -25,7 +25,7 @@ const Navbar = () => {
   const logout = () => {
     googleLogout();
     dispatch({ type: "LOGOUT" });
-    navigate("/");
+    navigate("/auth");
     setUser(null);
   };
   return (
@@ -49,14 +49,14 @@ const Navbar = () => {
               className={classes.purple}
               // alt={user.decode.result.name}
               // src={user.result.imageUrl}
-              src={user.decode.picture}
+              src={user.result.picture}
             >
-              {/* {user.result.name.charAt(0)} */}
-              {user.decode.name.charAt(0)}
+              {user.result.name.charAt(0)}
+              {/* {user.decode.name.charAt(0)} */}
             </Avatar>
             <Typography className={classes.userName} variant="h6">
-              {/* {user.result.name} */}
-              {user.decode.name}
+              {user.result.name}
+              {/* {user.decode.name} */}
             </Typography>
             <Button
               variant="contained"
